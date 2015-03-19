@@ -9,14 +9,14 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>pom</name>
+    <name>Pom</name>
     <description>pom parent who contains the base of pom</description>
+    <url>https://github.com/dralagen/pom</url>
 
     <licenses>
         <license>
             <name>GNU Affero General Public License version 3</name>
             <url>http://www.gnu.org/licenses/agpl.txt</url>
-            <distribution>repo</distribution>
         </license>
     </licenses>
 
@@ -37,18 +37,23 @@
     </scm>
 
     <properties>
+        <!-- class contains the main function -->
         <java.mainClass/>
         <jar.addClassPath>true</jar.addClassPath>
+        <!-- assemble create a jar with dependencies -->
+        <assembly.skipAssembly>true</assembly.skipAssembly>
+
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
         <github.global.server>github</github.global.server>
 
         <!-- versions -->
         <maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
         <maven.jar.plugin.version>2.3.1</maven.jar.plugin.version>
+        <maven.assembly.version>2.5.3</maven.assembly.version>
         <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
         <maven.deploy.plugin.version>2.8.1</maven.deploy.plugin.version>
 
-        <site.maven.plugin.version>0.10</site.maven.plugin.version>
+        <site.maven.plugin.version>0.11</site.maven.plugin.version>
         <site.maven.plugin.branch>refs/heads/master</site.maven.plugin.branch>
         <site.maven.plugin.repo.name>maven-repo</site.maven.plugin.repo.name>
         <site.maven.plugin.repo.owner>dralagen</site.maven.plugin.repo.owner>
@@ -58,7 +63,7 @@
         <jgitflow.version>1.0-m4.3</jgitflow.version>
         <jgitflow.branch.master>master</jgitflow.branch.master>
         <jgitflow.branch.develop>develop</jgitflow.branch.develop>
-        <jgitflow.version.tag.prefix/>
+        <jgitflow.version.tag.prefix>v</jgitflow.version.tag.prefix>
         <jgitflow.auto.version.submodules>true</jgitflow.auto.version.submodules>
         <jgitflow.push.release.branch>false</jgitflow.push.release.branch>
         <jgitflow.allow.untracked>true</jgitflow.allow.untracked>
@@ -100,6 +105,30 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven.assembly.version}</version>
+                    <configuration>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                        <archive>
+                            <manifest>
+                                <mainClass>${java.mainClass}</mainClass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven.dependency.plugin.version}</version>
                     <configuration>
@@ -135,6 +164,7 @@
                         <includes><include>**/*</include></includes>
                         <repositoryName>${site.maven.plugin.repo.name}</repositoryName>
                         <repositoryOwner>${site.maven.plugin.repo.owner}</repositoryOwner>
+                        <server>${github.global.server}</server>
                     </configuration>
                     <executions>
                         <execution>
