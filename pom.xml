@@ -6,11 +6,11 @@
 
     <groupId>fr.dralagen</groupId>
     <artifactId>pom</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 
     <name>Pom</name>
-    <description>pom parent who contains the base of pom</description>
+    <description>Pom parent who contains the base of pom</description>
     <url>https://github.com/dralagen/pom</url>
 
     <licenses>
@@ -46,15 +46,15 @@
 
         <!-- versions -->
         <maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
-        <maven.jar.plugin.version>2.3.1</maven.jar.plugin.version>
+        <maven.jar.plugin.version>2.5</maven.jar.plugin.version>
         <maven.assembly.version>2.5.3</maven.assembly.version>
         <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
         <maven.deploy.plugin.version>2.8.5</maven.deploy.plugin.version>
-        <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
-        <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
+        <maven.source.plugin.version>2.4</maven.source.plugin.version>
+        <maven.javadoc.plugin.version>2.10.1</maven.javadoc.plugin.version>
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
 
-        <nexus.staging.version>1.6.3</nexus.staging.version>
+        <nexus.staging.version>1.6.5</nexus.staging.version>
         <nexus.staging.server>ossrh</nexus.staging.server>
         <nexus.staging.url>https://oss.sonatype.org/</nexus.staging.url>
         <nexus.staging.autoReleaseAfterClose>true</nexus.staging.autoReleaseAfterClose>
@@ -152,46 +152,6 @@
                     <version>${maven.deploy.plugin.version}</version>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven.source.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${maven.javadoc.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${nexus.staging.version}</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <serverId>${nexus.staging.server}</serverId>
-                        <nexusUrl>${nexus.staging.url}</nexusUrl>
-                        <autoReleaseAfterClose>${nexus.staging.autoReleaseAfterClose}</autoReleaseAfterClose>
-                    </configuration>
-                </plugin>
-
                 <!--
                     mvn jgitflow:release-start
                     mvn jgitflow:release-finish
@@ -213,19 +173,11 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
-        <!-- pom plugin -->
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
     </build>
 
     <profiles>
          <profile>
-            <id>release-sign-artifacts</id>
+            <id>release-profile</id>
             <activation>
                 <property>
                     <name>performRelease</name>
@@ -238,6 +190,18 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${nexus.staging.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>${nexus.staging.server}</serverId>
+                            <nexusUrl>${nexus.staging.url}</nexusUrl>
+                            <autoReleaseAfterClose>${nexus.staging.autoReleaseAfterClose}</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>${maven.gpg.plugin.version}</version>
@@ -247,6 +211,34 @@
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven.source.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven.javadoc.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
