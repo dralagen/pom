@@ -133,9 +133,6 @@
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven.dependency.plugin.version}</version>
-                    <configuration>
-                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                    </configuration>
                     <executions>
                         <execution>
                             <phase>package</phase>
