@@ -39,6 +39,7 @@
         <java.mainClass />
         <java.version>1.6</java.version>
         <jar.addClassPath>true</jar.addClassPath>
+        <jar.classpathPrefix>dependency/</jar.classpathPrefix>
         <!-- assemble create a jar with dependencies -->
         <assembly.skipAssembly>true</assembly.skipAssembly>
 
@@ -99,6 +100,7 @@
                             <manifest>
                                 <mainClass>${java.mainClass}</mainClass>
                                 <addClasspath>${jar.addClassPath}</addClasspath>
+                                <classpathPrefix>${jar.classpathPrefix}</classpathPrefix>
                             </manifest>
                         </archive>
                     </configuration>
@@ -137,6 +139,9 @@
                             <goals>
                                 <goal>copy-dependencies</goal>
                             </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/${jar.classpathPrefix}</outputDirectory>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
